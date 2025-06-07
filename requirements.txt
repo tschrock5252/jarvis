@@ -1,0 +1,11 @@
+openai-whisper
+sounddevice
+scipy
+requests
+TTS
+pvporcupine
+pyaudio
+python-dotenv
+pvporcupine
+pyaudio
+whisper
