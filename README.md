@@ -62,7 +62,7 @@ cd jarvis_project
 python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
-
+```
 ### 2. Configure Environment
 
 Create a .env file with your Porcupine access key:
