@@ -86,7 +86,7 @@ python run.py
 |List files|Runs ls -l in shell|
 |Show disk space|Shows disk usage via df|
 |Shutdown|(Pretend) shutdown message|
-|<Ask>|Open-ended prompts are simply answered by LLaMA3|
+|`<Ask>`|Open-ended prompts are simply answered by LLaMA3|
 
 ## systemd Support
 ```
