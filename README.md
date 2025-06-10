@@ -43,6 +43,9 @@ jarvis_project/
 └── README.md
 ```
 
+## Architecture
+![Architecture Image](jarvis.png)
+
 ## Requirements
 - Python 3.10+
 - A Linux machine with microphone support (PulseAudio or ALSA)
