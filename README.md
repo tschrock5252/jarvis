@@ -4,6 +4,9 @@ Jarvis is a voice-activated assistant powered by local models including Whisper 
 
 ---
 
+## Architecture
+![Architecture Image](jarvis.png)
+
 ## Features
 
 - **Passive Wake Word Detection** (via Picovoice Porcupine)
@@ -42,9 +45,6 @@ jarvis_project/
 ├── .env # Secrets like access_key
 └── README.md
 ```
-
-## Architecture
-![Architecture Image](jarvis.png)
 
 ## Requirements
 - Python 3.10+
@@ -123,7 +123,63 @@ sudo systemctl enable --now jarvis.service
 ## AI Context Memory
 Jarvis maintains the last 10 turns of conversation to support contextual replies through LLaMA.
 
+## Windows Scripting
+**watch-and-play.ps1**
+```
+$watchPath = "C:\Jarvis"
+$wavFile = "$watchPath\jarvis.wav"
+$lockFile = "$watchPath\playback.lock"
+$logFile = "$watchPath\playback_log.txt"
+
+function Wait-For-File {
+    param ($filePath, $timeoutSeconds = 10)
+    $sw = [Diagnostics.Stopwatch]::StartNew()
+    while ($sw.Elapsed.TotalSeconds -lt $timeoutSeconds) {
+        if (Test-Path $filePath) {
+            # File exists, check if stable
+            $size1 = (Get-Item $filePath).length
+            Start-Sleep -Milliseconds 500
+            $size2 = (Get-Item $filePath).length
+            if ($size1 -eq $size2) {
+                return $true
+            }
+        }
+        Start-Sleep -Milliseconds 250
+    }
+    return $false
+}
+
+Write-Output "Watching for Jarvis audio..."
+
+while ($true) {
+    if (Test-Path $lockFile) {
+        Write-Output "Jarvis audio triggered at $(Get-Date)" | Tee-Object -FilePath $logFile -Append
+
+        if (Wait-For-File -filePath $wavFile) {
+            try {
+                # Use PlaySync for blocking playback
+                $player = New-Object System.Media.SoundPlayer $wavFile
+                $player.PlaySync()
+                Remove-Item $wavFile -ErrorAction Stop
+                Remove-Item $lockFile -ErrorAction Stop
+                Write-Output "Deleted: $wavFile and lock file" | Tee-Object -FilePath $logFile -Append
+            }
+            catch {
+                Write-Output "Error during playback or deletion: $_" | Tee-Object -FilePath $logFile -Append
+            }
+        }
+        else {
+            Write-Output "WAV file not stable or never appeared." | Tee-Object -FilePath $logFile -Append
+        }
+    }
+
+    Start-Sleep -Milliseconds 250
+}
+```
+
 ## Future Ideas
+ - Migration off of Windows for playback and onto a centralized audio system.
+   - Either MQTT Event + Media Receiver Clients, or a Custom REST or Socket Playback Microservice
  - Plugin architecture for custom extensions
  - Live web search using Google PSE + Ollama
  - MQTT or webhook support for smart home integration
