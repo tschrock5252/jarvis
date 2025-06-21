@@ -1,5 +1,9 @@
 # Jarvis Voice Assistant
 
+![Python](https://img.shields.io/badge/python-3.10+-blue)
+![License](https://img.shields.io/github/license/tschrock5252/jarvis)
+![Last Commit](https://img.shields.io/github/last-commit/tschrock5252/jarvis)
+
 Jarvis is a voice-activated assistant powered by local models including Whisper (speech-to-text), LLaMA (language model), and Coqui TTS (text-to-speech). It supports real-time wake word detection via Porcupine and understands both static commands and open-ended natural language.
 
 ---
